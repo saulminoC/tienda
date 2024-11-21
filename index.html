@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="./Frontend/css/login.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <title>Login y Registro - Mi Tienda</title>
+</head>
+
+<body>
+    <div class="container" id="container">
+        <!-- Formulario de Registro -->
+        <div class="form-container sign-up">
+            <form id="register-form">
+                <h1>Crear Cuenta</h1>
+                <div class="social-icons">
+                    <a href="#" class="icons"><i class='bx bxl-google'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-facebook'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-github'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-linkedin'></i></a>
+                </div>
+                <span>Regístrate con tu correo electrónico</span>
+                <input type="text" id="register-name" placeholder="Nombre" required>
+                <input type="email" id="register-email" placeholder="Correo Electrónico" required>
+                <input type="password" id="register-password" placeholder="Contraseña" required>
+                <button type="submit">Registrarse</button>
+                <p id="register-error" class="error-message"></p>
+            </form>
+        </div>
+
+        <!-- Formulario de Inicio de Sesión -->
+        <div class="form-container sign-in">
+            <form id="login-form">
+                <h1>Iniciar Sesión</h1>
+                <div class="social-icons">
+                    <a href="#" class="icons"><i class='bx bxl-google'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-facebook'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-github'></i></a>
+                    <a href="#" class="icons"><i class='bx bxl-linkedin'></i></a>
+                </div>
+                <span>Ingresa con tu correo y contraseña</span>
+                <input type="email" id="login-email" placeholder="Correo Electrónico" required>
+                <input type="password" id="login-password" placeholder="Contraseña" required>
+                <button type="submit">Ingresar</button>
+                <p id="login-error" class="error-message"></p>
+            </form>
+        </div>
+
+        <!-- Panel de Alternancia -->
+        <div class="toggle-container">
+            <div class="toggle">
+                <div class="toggle-panel toggle-left">
+                    <h1>Bienvenido</h1>
+                    <p>Inicia sesión con tu cuenta</p>
+                    <button class="hidden" id="login-toggle">Iniciar Sesión</button>
+                </div>
+                <div class="toggle-panel toggle-right">
+                    <h1>Únete a Nosotros</h1>
+                    <p>Crea una cuenta para disfrutar de nuestros servicios</p>
+                    <button class="hidden" id="register-toggle">Registrarse</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./Frontend/js/login.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Tienda</title>
+    <link rel="stylesheet" href="/tienda/Frontend/css/inicio.css">
+    <!-- Botón para abrir/cerrar el carrito -->
+    <button id="toggle-carrito" class="toggle-carrito">🛒</button>
+    <script src="/tienda/Frontend/js/script.js"></script>
+    
+</head>
+<body>
+    <!-- Barra de navegación -->
+    <nav class="navbar">
+        <div class="nav-content">
+            <h1>Mi Tienda</h1>
+            <div class="nav-links">
+                <a href="#">Inicio</a>
+                <a href="#">Productos</a>
+                <a href="#">Contacto</a>
+            </div>
+            
+
+            <!-- Contenedor del carrito -->
+            <div id="carrito" class="carrito cerrado">
+                <h3>Carrito</h3>
+                <div id="carrito-items" class="carrito-items">
+                    <!-- Los productos del carrito se añadirán aquí dinámicamente -->
+                </div>
+            </div>
+
+            
+        </div>
+    </nav>
+
+    <!-- Contenido principal -->
+    <div class="container">
+        <h2>Productos disponibles</h2>
+        <div id="productos" class="productos">
+            <!-- Los productos serán añadidos aquí dinámicamente con JavaScript -->
+        </div>
+    </div>
+    <!-- Pie de página -->
+    <footer>
+        © 2024 Mi Tienda de PCs y Componentes. Todos los derechos reservados.
+    </footer>
+</body>
+</html>
