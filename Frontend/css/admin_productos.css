@@ -1,0 +1,222 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    background-color: rgba(0, 0, 0, 0.795);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    min-height: 100vh;
+    color: #333;
+}
+
+.navbar {
+    width: 100%;
+    background-color: rgb(255, 13, 13);
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    position: fixed;
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar h1 a {
+    text-decoration: none;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+    color: #ffcccc;
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 30px;
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.35);
+    width: 90%;
+    max-width: 768px;
+    margin: 100px auto 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.container h2 {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: rgb(255, 13, 13);
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form label {
+    font-size: 1rem;
+    font-weight: 500;
+    text-align: left;
+}
+
+form input,
+form select,
+form textarea {
+    background-color: #eee;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    border-radius: 8px;
+    outline: none;
+    width: 100%;
+    resize: none; /* Para deshabilitar el redimensionado de los textarea */
+}
+
+form button {
+    background-color: rgb(255, 13, 13);
+    color: #fff;
+    font-size: 1rem;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: rgb(200, 10, 10);
+}
+
+.mensaje {
+    color: green;
+    font-size: 1rem;
+    margin-top: 10px;
+}
+
+#lista-productos {
+    width: 100%;
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.producto-item {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+}
+
+.producto-item img {
+    width: 100%;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.producto-item h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: rgb(255, 13, 13);
+    margin: 10px 0;
+}
+
+.producto-item p {
+    font-size: 0.9rem;
+    color: #555;
+    margin: 5px 0;
+}
+
+.producto-item input,
+.producto-item textarea,
+.producto-item select {
+    background-color: #eee;
+    border: none;
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    outline: none;
+    width: 100%;
+}
+
+.producto-item button {
+    background-color: rgb(255, 13, 13);
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    align-self: center;
+}
+
+.producto-item button:hover {
+    background-color: rgb(200, 10, 10);
+}
+
+.producto-item .vista-previa {
+    margin-top: 10px;
+}
+
+.producto-item .vista-previa img {
+    width: 100%;
+    max-height: 100px;
+    object-fit: contain;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+@media (max-width: 768px) {
+    #lista-productos {
+        grid-template-columns: 1fr;
+    }
+
+    .producto-item img {
+        max-height: 120px;
+    }
+}

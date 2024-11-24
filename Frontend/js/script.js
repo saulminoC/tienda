@@ -30,6 +30,54 @@ async function cargarProductos() {
     }
 }
 
+async function filtrarProductos(categoria) {
+    try {
+        const response = await fetch(`/tienda/Backend/filtrar_productos.php?categoria=${categoria}`);
+        const productosFiltrados = await response.json();
+
+        const contenedor = document.getElementById('productos');
+        contenedor.innerHTML = '';
+
+        if (productosFiltrados.length === 0) {
+            contenedor.innerHTML = '<p>No se encontraron productos en esta categoría.</p>';
+            return;
+        }
+
+        productosFiltrados.forEach(producto => {
+            const card = document.createElement('div');
+            card.className = 'producto-card';
+            card.innerHTML = `
+                <img src="${producto.imagen}" alt="${producto.nombre}" class="producto-imagen">
+                <h3>${producto.nombre}</h3>
+                <p>${producto.descripcion}</p>
+                <p>$${producto.precio}</p>
+                <button onclick="verDetalle(${producto.id})">Ver Detalles</button>
+                <button onclick="agregarAlCarrito(${producto.id}, '${producto.nombre}', ${producto.precio})">Agregar al carrito</button>
+            `;
+            contenedor.appendChild(card);
+        });
+    } catch (error) {
+        console.error('Error al filtrar productos:', error);
+    }
+}
+
+
+function mostrarProductos(productos) {
+    const contenedor = document.getElementById('productos');
+    contenedor.innerHTML = '';
+    productos.forEach(producto => {
+        contenedor.innerHTML += `
+            <div class="producto-card">
+                <img src="${producto.imagen}" alt="${producto.nombre}">
+                <h3>${producto.nombre}</h3>
+                <p>${producto.descripcion}</p>
+                <p>$${producto.precio}</p>
+                <button onclick="agregarAlCarrito(${producto.id}, '${producto.nombre}', ${producto.precio})">Agregar al carrito</button>
+            </div>
+        `;
+    });
+}
+
 // Función para redirigir a detalle.html con el ID del producto
 function verDetalle(id) {
     // Redirige a detalle.html pasando el ID del producto como parámetro en la URL
@@ -86,11 +134,55 @@ function mostrarCarrito() {
     totalDiv.innerHTML = `<h3>Total: $${total}</h3>`;
     contenedorCarrito.appendChild(totalDiv);
 }
+function actualizarCarritoContador() {
+    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+    const contador = document.getElementById('carrito-contador');
+    if (contador) {
+        contador.textContent = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+    }
+}
+
+
+document.addEventListener('DOMContentLoaded', actualizarCarritoContador);
 
 // Función para guardar el carrito en localStorage
 function guardarCarrito() {
     localStorage.setItem('carrito', JSON.stringify(carritoItems));
 }
+
+async function filtrarProductosAvanzados() {
+    const categoria = document.getElementById("categoria-filtro").value;
+    const precioMin = parseFloat(document.getElementById("precio-min").value) || 0;
+    const precioMax = parseFloat(document.getElementById("precio-max").value) || Infinity;
+
+    try {
+        // Solicitar productos filtrados al backend
+        const response = await fetch(`/tienda/Backend/filtrar_productos.php?categoria=${categoria}&precioMin=${precioMin}&precioMax=${precioMax}`);
+        const productosFiltrados = await response.json();
+
+        // Mostrar productos filtrados
+        mostrarProductos(productosFiltrados);
+    } catch (error) {
+        console.error("Error al filtrar productos:", error);
+    }
+}
+
+function restablecerFiltros() {
+    document.getElementById("categoria-filtro").value = "todos";
+    document.getElementById("precio-min").value = "";
+    document.getElementById("precio-max").value = "";
+    cargarProductos(); // Recarga todos los productos
+}
+
+
+function restablecerFiltros() {
+    document.getElementById("categoria-filtro").value = "todos";
+    document.getElementById("precio-min").value = "";
+    document.getElementById("precio-max").value = "";
+    cargarProductos(); // Recarga todos los productos
+}
+
+
 
 // Referencias al botón y contenedor del carrito
 document.addEventListener('DOMContentLoaded', () => {
@@ -104,6 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Función para alternar el estado del carrito
     toggleCarritoButton.addEventListener('click', () => {
+        console.log("boton del carrito presionado");
         carritoContainer.classList.toggle('abierto'); // Abre o cierra el carrito
         carritoContainer.classList.toggle('cerrado'); // Cierra o abre el carrito
     });

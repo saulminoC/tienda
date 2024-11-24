@@ -1,37 +1,61 @@
 <?php
+session_start();
 header('Content-Type: application/json');
-require 'db.php';
 
+// Conexión a la base de datos
+$servername = "localhost"; // Cambia si es necesario
+$username = "root";        // Usuario de la base de datos
+$password = "";            // Contraseña
+$dbname = "tienda";        // Nombre de la base de datos
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+// Verificar conexión
+if ($conn->connect_error) {
+    echo json_encode(['exito' => false, 'mensaje' => 'Error al conectar a la base de datos.']);
+    exit;
+}
+
+// Leer datos enviados por el formulario
 $data = json_decode(file_get_contents("php://input"), true);
-$email = $data['email'];
-$password = $data['password'];
+$email = $data['email'] ?? '';
+$password = $data['password'] ?? '';
 
-$sql = "SELECT id, nombre, password FROM usuarios WHERE email = ?";
+// Validar entrada
+if (empty($email) || empty($password)) {
+    echo json_encode(['exito' => false, 'mensaje' => 'Todos los campos son obligatorios.']);
+    exit;
+}
+
+// Consultar usuario en la base de datos
+$sql = "SELECT id, email, password, nombre FROM usuarios WHERE email = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $result = $stmt->get_result();
 
-echo password_hash('contraseña', PASSWORD_DEFAULT);
-$inputPassword = 'contraseña';
-$storedHash = '$2y$10$8sP2xd3X9TtZZjBuvQaLFeQ8.CfCjs1WTsCFrrbgVVHOVaT53gKWm';
+if ($result->num_rows === 1) {
+    $usuario = $result->fetch_assoc();
 
-if (password_verify($inputPassword, $storedHash)) {
-    echo "La contraseña es correcta.";
-} else {
-    echo "La contraseña no coincide.";
-}
+    // Verificar contraseña
+    if (password_verify($password, $usuario['password'])) {
+        $_SESSION['user_id'] = $usuario['id'];
+        $_SESSION['user_email'] = $usuario['email'];
+        $_SESSION['user_name'] = $usuario['nombre'];
 
-if ($result->num_rows > 0) {
-    $user = $result->fetch_assoc();
-    if (password_verify($password, $user['password'])) {
-        echo json_encode(["success" => true, "message" => "Inicio de sesión exitoso", "user_id" => $user['id']]);
+        // Redirigir según el correo electrónico
+        if ($usuario['email'] === 'admin@tuempresa.com') { // Cambia este correo por el del administrador
+            echo json_encode(['exito' => true, 'mensaje' => 'Inicio de sesión como administrador.', 'redirect' => '/tienda/Frontend/web/admin_productos.html']);
+        } else {
+            echo json_encode(['exito' => true, 'mensaje' => 'Inicio de sesión exitoso.', 'redirect' => '/tienda/Frontend/web/inicio.html']);
+        }
     } else {
-        echo json_encode(["success" => false, "message" => "Contraseña incorrecta"]);
+        echo json_encode(['exito' => false, 'mensaje' => 'Contraseña incorrecta.']);
     }
 } else {
-    echo json_encode(["success" => false, "message" => "Usuario no encontrado"]);
+    echo json_encode(['exito' => false, 'mensaje' => 'Correo electrónico no registrado.']);
 }
+
 $stmt->close();
 $conn->close();
 ?>

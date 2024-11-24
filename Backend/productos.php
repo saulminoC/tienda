@@ -1,20 +1,24 @@
 <?php
 header('Content-Type: application/json');
-require 'db.php'; // Asegúrate de que este archivo contiene la conexión a la base de datos
+require 'db.php'; // Archivo que conecta con la base de datos
 
-$sql = "SELECT id, nombre, descripcion, precio, imagen FROM productos";
+// Obtener todos los productos de la base de datos
+$sql = "SELECT * FROM productos";
 $result = $conn->query($sql);
 
 $productos = [];
-
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $productos[] = $row;
+        $productos[] = [
+            'id' => $row['id'],
+            'nombre' => $row['nombre'],
+            'descripcion' => $row['descripcion'],
+            'precio' => $row['precio'],
+            'imagen' => $row['imagen']
+        ];
     }
 }
 
-// Devolver los productos como JSON
 echo json_encode($productos);
-
 $conn->close();
 ?>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto | SAINT TECH</title>
+    <link rel="stylesheet" href="/tienda/Frontend/css/contacto.css">
+</head>
+<body>
+ <!-- Barra de navegación -->
+ <nav class="navbar">
+    <div class="nav-content">
+        <h1><a href="/tienda/Frontend/web/inicio.html">tech</a></h1>
+        <ul class="nav-links">
+            <li><a href="/tienda/Frontend/web/inicio.html">Inicio</a></li>
+            <li class="dropdown">
+                <a href="#productos" class="dropdown-toggle">Productos</a>
+                <ul class="dropdown-menu">
+                    <li><button onclick="filtrarProductos('todos')">Todos</button></li>
+                    <li><button onclick="filtrarProductos('gaming')">Gaming</button></li>
+                    <li><button onclick="filtrarProductos('oficina')">Oficina</button></li>
+                </ul>
+            </li>
+            <li><a href="/tienda/Frontend/web/contacto.html">Contacto</a></li>
+            <li><a href="/tienda/Frontend/web/perfil.html">Perfil</a></li>
+            <li><a href="/tienda/Frontend/web/carrito.html">Carrito</a></li>
+            <a href="#" id="logout-button" style="margin-left: 20px; color: white;">Cerrar Sesión</a>
+<script>
+    document.getElementById("logout-button").addEventListener("click", () => {
+        localStorage.removeItem("user_name"); // Eliminar datos del usuario
+        window.location.href = "/tienda/index.html"; // Redirigir al login
+    });
+</script>
+
+        </ul>
+        <button id="toggle-carrito" class="toggle-carrito">🛒</button>
+    </div>
+
+
+            <!-- Contenedor del carrito -->
+            <div id="carrito" class="carrito cerrado">
+                <h3></h3>
+                <div id="carrito-items" class="carrito-items">
+                    <!-- Los productos del carrito se añadirán aquí dinámicamente -->
+                </div>
+            </div>
+
+            
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2>Contacto</h2>
+        <p>¿Tienes alguna pregunta o comentario? ¡Contáctanos!</p>
+        <form id="contacto-form">
+            <label for="nombre">Nombre Completo:</label>
+            <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" placeholder="Tu correo" required>
+
+            <label for="mensaje">Mensaje:</label>
+            <textarea id="mensaje" name="mensaje" placeholder="Escribe tu mensaje aquí..." rows="5" required></textarea>
+
+            <button type="submit">Enviar Mensaje</button>
+            <p id="mensaje-exito" class="mensaje oculto">¡Tu mensaje ha sido enviado con éxito!</p>
+            <p id="mensaje-error" class="mensaje oculto">Ocurrió un error. Por favor, inténtalo de nuevo.</p>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('contacto-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+
+            try {
+                const response = await fetch('/tienda/Backend/contacto.php', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (result.exito) {
+                    document.getElementById('mensaje-exito').classList.remove('oculto');
+                    document.getElementById('mensaje-error').classList.add('oculto');
+                    e.target.reset(); // Limpiar el formulario
+                } else {
+                    document.getElementById('mensaje-error').classList.remove('oculto');
+                    document.getElementById('mensaje-exito').classList.add('oculto');
+                }
+            } catch (error) {
+                console.error('Error al enviar el mensaje:', error);
+                document.getElementById('mensaje-error').classList.remove('oculto');
+                document.getElementById('mensaje-exito').classList.add('oculto');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmación de Compra</title>
+    <link rel="stylesheet" href="/tienda/Frontend/css/confirmacion.css">
+</head>
+<body>
+    <div class="container">
+        <h1>¡Gracias por tu compra!</h1>
+        <p>Tu pedido ha sido procesado con éxito.</p>
+
+        <!-- Botón para confirmar el pedido -->
+        <button id="confirmar-pedido">Confirmar Pedido</button>
+        <br><br>
+
+        <!-- Enlace dinámico para descargar el ticket -->
+        <a id="ticket-link" href="#" target="_blank" style="display: none;">Descargar Ticket</a>
+        <br><br>
+
+        <!-- Enlace para volver al inicio -->
+        <a href="/tienda/Frontend/web/inicio.html">Volver al Inicio</a>
+    </div>
+
+    <script>
+        document.getElementById("confirmar-pedido").addEventListener("click", async () => {
+            const productos = [
+               
+            ];
+        
+            const total = productos.reduce((acc, prod) => acc + prod.cantidad * prod.precio, 0);
+        
+            try {
+                const response = await fetch("/tienda/Backend/confirmar_pedido.php", {
+                    method: "POST",
+                    body: JSON.stringify({ total, productos }),
+                    headers: { "Content-Type": "application/json" }
+                });
+        
+                if (!response.ok) {
+                    throw new Error(`HTTP Error: ${response.status}`);
+                }
+        
+                const resultado = await response.json();
+        
+                if (resultado.exito) {
+                    alert(resultado.mensaje);
+        
+                    const ticketLink = document.getElementById("ticket-link");
+                    ticketLink.href = `/tienda/Backend/generar_ticket.php?pedido_id=${resultado.pedido_id}`;
+                    ticketLink.style.display = "inline-block";
+                } else {
+                    alert(resultado.mensaje);
+                }
+            } catch (error) {
+                console.error("Error al confirmar el pedido:", error);
+                alert("Hubo un error al confirmar el pedido. Intenta nuevamente.");
+            }
+        });
+        
+    </script>
+</body>
+</html>

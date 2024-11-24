@@ -1,77 +1,108 @@
-// Referencias a los elementos de la página
-const container = document.getElementById("container");
-const loginToggle = document.getElementById("login-toggle");
-const registerToggle = document.getElementById("register-toggle");
-const loginForm = document.getElementById("login-form");
-const registerForm = document.getElementById("register-form");
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById("container");
+    const loginToggle = document.getElementById("login-toggle");
+    const registerToggle = document.getElementById("register-toggle");
+    const loginForm = document.getElementById("login-form");
+    const registerForm = document.getElementById("register-form");
+    const loginError = document.getElementById("login-error");
+    const registerError = document.getElementById("register-error");
 
-// Alternar entre formularios
-loginToggle.addEventListener("click", () => {
-    container.classList.remove("active"); // Mostrar formulario de inicio de sesión
-});
-
-registerToggle.addEventListener("click", () => {
-    container.classList.add("active"); // Mostrar formulario de registro
-});
-
-// Manejo del formulario de inicio de sesión
-loginForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    // Obtener valores del formulario
-    const email = document.getElementById("login-email").value;
-    const password = document.getElementById("login-password").value;
-
-    try {
-        // Enviar datos al Backend
-        const response = await fetch("./Backend/login.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password }),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            alert(data.message);
-            window.location.href = "./Frontend/web/inicio.html"; // Redirigir a la página principal
-        } else {
-            document.getElementById("login-error").innerText = data.message;
+    document.getElementById("login-form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+        const datos = { email, password };
+    
+        try {
+            const response = await fetch("/tienda/Backend/login.php", {
+                method: "POST",
+                body: JSON.stringify(datos),
+                headers: { "Content-Type": "application/json" },
+            });
+            const resultado = await response.json();
+    
+            if (resultado.exito) {
+                alert(resultado.mensaje);
+                window.location.href = resultado.redirect; // Redirigir a la URL proporcionada
+            } else {
+                alert(resultado.mensaje); // Mostrar mensaje de error
+            }
+        } catch (error) {
+            console.error("Error al iniciar sesión:", error);
         }
-    } catch (error) {
-        console.error("Error al iniciar sesión:", error);
-        document.getElementById("login-error").innerText = "Ocurrió un error. Inténtalo nuevamente.";
-    }
-});
+    });
+    
 
-// Manejo del formulario de registro
-registerForm.addEventListener("submit", async (e) => {
-    e.preventDefault();
+    // Alternar entre formularios
+    loginToggle.addEventListener("click", () => {
+        container.classList.remove("active");
+    });
 
-    // Obtener valores del formulario
-    const nombre = document.getElementById("register-name").value;
-    const email = document.getElementById("register-email").value;
-    const password = document.getElementById("register-password").value;
+    registerToggle.addEventListener("click", () => {
+        container.classList.add("active");
+    });
 
-    try {
-        // Enviar datos al Backend
-        const response = await fetch("./Backend/register.php", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ nombre, email, password }),
-        });
+    // Manejo del formulario de inicio de sesión
+    loginForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
 
-        const data = await response.json();
+        const email = document.getElementById("login-email").value;
+        const password = document.getElementById("login-password").value;
 
-        if (data.success) {
-            alert(data.message);
-            registerForm.reset(); // Reiniciar formulario de registro
-            container.classList.remove("active"); // Cambiar al formulario de inicio de sesión
-        } else {
-            document.getElementById("register-error").innerText = data.message;
+        try {
+            const response = await fetch("/tienda/Backend/login.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(data.message);
+                localStorage.setItem("user_name", data.user_name); // Guardar el nombre del usuario
+                window.location.href = "/tienda/Frontend/web/inicio.html"; // Redirigir al inicio
+            } else {
+                loginError.textContent = data.message;
+                loginError.style.color = "red";
+            }
+        } catch (error) {
+            console.error("Error al iniciar sesión:", error);
+            loginError.textContent = "Error al iniciar sesión. Inténtalo más tarde.";
+            loginError.style.color = "red";
         }
-    } catch (error) {
-        console.error("Error al registrarse:", error);
-        document.getElementById("register-error").innerText = "Ocurrió un error. Inténtalo nuevamente.";
-    }
+    });
+
+    // Manejo del formulario de registro
+    registerForm.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        const nombre = document.getElementById("register-name").value;
+        const email = document.getElementById("register-email").value;
+        const password = document.getElementById("register-password").value;
+
+        try {
+            const response = await fetch("/tienda/Backend/register.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ nombre, email, password })
+            });
+
+            const data = await response.json();
+
+            if (data.success) {
+                alert(data.message);
+                registerForm.reset(); // Limpiar formulario de registro
+                container.classList.remove("active"); // Cambiar a formulario de inicio de sesión
+            } else {
+                registerError.textContent = data.message;
+                registerError.style.color = "red";
+            }
+        } catch (error) {
+            console.error("Error al registrarse:", error);
+            registerError.textContent = "Error al registrarse. Inténtalo más tarde.";
+            registerError.style.color = "red";
+        }
+    });
 });

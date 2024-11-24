@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Productos</title>
+    <link rel="stylesheet" href="/tienda/Frontend/css/admin_productos.css">
+</head>
+<body>
+    <nav class="navbar">
+        <h1><a href="/tienda/Frontend/web/inicio.html">SAINT TECH</a></h1>
+        <ul>
+            <li><a href="/tienda/Frontend/web/inicio.html">Inicio</a></li>
+            <li><a href="/tienda/Frontend/web/admin_productos.html">Gestión de Productos</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>Gestión de Productos</h2>
+        <form id="producto-form">
+            <!--<p><strong>Vista Previa:</strong> <img src="${producto.imagen}" alt="${producto.nombre}" style="max-width: 100px; max-height: 100px;"></p>-->
+
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="descripcion">Descripción:</label>
+            <textarea id="descripcion" name="descripcion" required></textarea>
+
+            <label for="precio">Precio:</label>
+            <input type="number" step="0.01" id="precio" name="precio" required>
+
+            <label for="categoria">Categoría:</label>
+            <select id="categoria" name="categoria">
+                <option value="gaming">Gaming</option>
+                <option value="oficina">Oficina</option>
+                <option value="accesorios">Accesorios</option>
+            </select>
+
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock" required>
+
+            <label for="imagen">Imagen URL:</label>
+            <input type="text" id="imagen" name="imagen" required>
+
+            <button type="submit">Guardar Producto</button>
+            <p id="mensaje" class="mensaje"></p>
+        </form>
+
+        <h3>Productos Existentes</h3>
+        <div id="lista-productos">
+            <!-- Aquí se cargarán los productos existentes -->
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            cargarProductos();
+
+            // Enviar nuevo producto
+            document.getElementById("producto-form").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const producto = Object.fromEntries(formData.entries());
+                try {
+                    const response = await fetch("/tienda/Backend/crear_producto.php", {
+                        method: "POST",
+                        body: JSON.stringify(producto),
+                        headers: { "Content-Type": "application/json" },
+                    });
+                    const resultado = await response.json();
+                    alert(resultado.mensaje);
+                    cargarProductos(); // Recargar productos
+                } catch (error) {
+                    console.error("Error al guardar el producto:", error);
+                }
+            });
+        });
+
+        // Función para cargar productos
+        async function cargarProductos() {
+            try {
+                const response = await fetch("/tienda/Backend/listar_productos.php");
+                const productos = await response.json();
+                const contenedor = document.getElementById("lista-productos");
+                contenedor.innerHTML = "";
+
+                productos.forEach((producto) => {
+                    const productoDiv = document.createElement("div");
+                    productoDiv.className = "producto-item";
+                    productoDiv.innerHTML = `
+                        <p><strong>Nombre:</strong> <input type="text" value="${producto.nombre}" data-id="${producto.id}" class="nombre-editable"></p>
+                        <p><strong>Descripción:</strong> <textarea data-id="${producto.id}" class="descripcion-editable">${producto.descripcion}</textarea></p>
+                        <p><strong>Precio:</strong> <input type="number" step="0.01" value="${producto.precio}" data-id="${producto.id}" class="precio-editable"></p>
+                        <p><strong>Categoría:</strong> 
+                            <select data-id="${producto.id}" class="categoria-editable">
+                                <option value="gaming" ${producto.categoria === "gaming" ? "selected" : ""}>Gaming</option>
+                                <option value="oficina" ${producto.categoria === "oficina" ? "selected" : ""}>Oficina</option>
+                                <option value="accesorios" ${producto.categoria === "accesorios" ? "selected" : ""}>Accesorios</option>
+                            </select>
+                        </p>
+                        <p><strong>Stock:</strong> <input type="number" value="${producto.stock}" data-id="${producto.id}" class="stock-editable"></p>
+                        <p><strong>Imagen:</strong> <input type="text" value="${producto.imagen}" data-id="${producto.id}" class="imagen-editable"></p>
+                        <p><strong>Vista Previa:</strong> <img src="${producto.imagen}" alt="${producto.nombre}" style="max-width: 100px; max-height: 100px;"></p>
+                        <button onclick="guardarCambios(${producto.id})">Guardar Cambios</button>
+                    `;
+                    contenedor.appendChild(productoDiv);
+                });
+            } catch (error) {
+                console.error("Error al cargar los productos:", error);
+            }
+        }
+
+        // Función para guardar cambios en un producto
+        async function guardarCambios(id) {
+            const nombre = document.querySelector(`.nombre-editable[data-id="${id}"]`).value;
+            const descripcion = document.querySelector(`.descripcion-editable[data-id="${id}"]`).value;
+            const precio = document.querySelector(`.precio-editable[data-id="${id}"]`).value;
+            const categoria = document.querySelector(`.categoria-editable[data-id="${id}"]`).value;
+            const stock = document.querySelector(`.stock-editable[data-id="${id}"]`).value;
+            const imagen = document.querySelector(`.imagen-editable[data-id="${id}"]`).value;
+
+            const producto = { id, nombre, descripcion, precio, categoria, stock, imagen };
+
+            try {
+                const response = await fetch("/tienda/Backend/editar_producto.php", {
+                    method: "POST",
+                    body: JSON.stringify(producto),
+                    headers: { "Content-Type": "application/json" },
+                });
+                const resultado = await response.json();
+                alert(resultado.mensaje);
+                cargarProductos(); // Recargar lista de productos
+            } catch (error) {
+                console.error("Error al guardar cambios:", error);
+            }
+        }
+    </script>
+</body>
+</html>

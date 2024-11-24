@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Administrador</title>
+    <link rel="stylesheet" href="/tienda/Frontend/css/admin_dashboard.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="navbar">
+        <h1><a href="/tienda/Frontend/web/admin_dashboard.html">Panel de Control</a></h1>
+        <ul>
+            <li><a href="/tienda/Frontend/web/admin_productos.html">Productos</a></li>
+            <li><a href="/tienda/Frontend/web/admin_pedidos.html">Pedidos</a></li>
+            <li><a href="/tienda/Frontend/web/admin_categorias.html">Categorías</a></li>
+            <li><a href="/tienda/Frontend/web/admin_usuarios.html">Usuarios</a></li>
+            <li><a href="/tienda/index.html">Cerrar Sesión</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <h2>Bienvenido al Panel de Control</h2>
+
+        <!-- Resumen -->
+        <div class="resumen">
+            <div class="card">
+                <h3>Ventas Totales</h3>
+                <p id="ventas-totales">$0.00</p>
+            </div>
+            <div class="card">
+                <h3>Pedidos Totales</h3>
+                <p id="pedidos-totales">0</p>
+            </div>
+            <div class="card">
+                <h3>Usuarios Registrados</h3>
+                <p id="usuarios-registrados">0</p>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="graficos">
+            <canvas id="ventasMensuales"></canvas>
+            <canvas id="productosMasVendidos"></canvas>
+        </div>
+
+        <!-- Pedidos Recientes -->
+        <h3>Pedidos Recientes</h3>
+        <div id="pedidos-recientes">
+            <!-- Pedidos se cargarán dinámicamente -->
+        </div>
+
+        <!-- Productos Bajos en Stock -->
+        <h3>Productos en Bajo Stock</h3>
+        <div id="productos-bajo-stock">
+            <!-- Productos se cargarán dinámicamente -->
+        </div>
+    </div>
+
+    <script src="/tienda/Frontend/js/admin_dashboard.js"></script>
+</body>
+</html>

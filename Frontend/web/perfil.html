@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" href="/tienda/Frontend/css/perfil.css">
+</head>
+<body>
+
+     <!-- Barra de navegación -->
+ <nav class="navbar">
+    <div class="nav-content">
+        <h1><a href="/tienda/Frontend/web/inicio.html">tech</a></h1>
+        <ul class="nav-links">
+            <li><a href="/tienda/Frontend/web/inicio.html">Inicio</a></li>
+            <li class="dropdown">
+                <a href="#productos" class="dropdown-toggle">Productos</a>
+                <ul class="dropdown-menu">
+                    <li><button onclick="filtrarProductos('todos')">Todos</button></li>
+                    <li><button onclick="filtrarProductos('gaming')">Gaming</button></li>
+                    <li><button onclick="filtrarProductos('oficina')">Oficina</button></li>
+                </ul>
+            </li>
+            <li><a href="/tienda/Frontend/web/contacto.html">Contacto</a></li>
+            <li><a href="/tienda/Frontend/web/perfil.html">Perfil</a></li>
+            <li><a href="/tienda/Frontend/web/carrito.html">Carrito</a></li>
+            <a href="#" id="logout-button" style="margin-left: 20px; color: white;">Cerrar Sesión</a>
+<script>
+    document.getElementById("logout-button").addEventListener("click", () => {
+        localStorage.removeItem("user_name"); // Eliminar datos del usuario
+        window.location.href = "/tienda/index.html"; // Redirigir al login
+    });
+</script>
+
+        </ul>
+        <button id="toggle-carrito" class="toggle-carrito">🛒</button>
+    </div>
+
+
+            <!-- Contenedor del carrito -->
+            <div id="carrito" class="carrito cerrado">
+                <h3></h3>
+                <div id="carrito-items" class="carrito-items">
+                    <!-- Los productos del carrito se añadirán aquí dinámicamente -->
+                </div>
+            </div>
+
+            
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <h2>Perfil de Usuario</h2>
+        <form id="perfil-form">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+
+            <label for="email">Correo Electrónico:</label>
+            <input type="email" id="email" name="email" required disabled>
+
+            <label for="password">Nueva Contraseña:</label>
+            <input type="password" id="password" name="password" placeholder="Deja vacío si no quieres cambiarla">
+
+            <button type="submit">Actualizar Perfil</button>
+            <p id="mensaje" class="mensaje"></p>
+        </form>
+    </div>
+
+    <script src="/tienda/Frontend/js/perfil.js"></script>
+</body>
+</html>

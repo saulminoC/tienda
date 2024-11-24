@@ -7,15 +7,29 @@ $nombre = $data['nombre'];
 $email = $data['email'];
 $password = password_hash($data['password'], PASSWORD_DEFAULT);
 
-$sql = "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)";
+// Verificar si el correo ya está registrado
+$sql = "SELECT id FROM usuarios WHERE email = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("sss", $nombre, $email, $password);
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$stmt->store_result();
 
-if ($stmt->execute()) {
-    echo json_encode(["success" => true, "message" => "Usuario registrado con éxito"]);
+if ($stmt->num_rows > 0) {
+    echo json_encode(["success" => false, "message" => "El correo ya está registrado."]);
 } else {
-    echo json_encode(["success" => false, "message" => "Error al registrar usuario"]);
+    // Insertar nuevo usuario
+    $stmt->close();
+    $sql = "INSERT INTO usuarios (nombre, email, password) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("sss", $nombre, $email, $password);
+
+    if ($stmt->execute()) {
+        echo json_encode(["success" => true, "message" => "Registro exitoso"]);
+    } else {
+        echo json_encode(["success" => false, "message" => "Error al registrar el usuario."]);
+    }
 }
+
 $stmt->close();
 $conn->close();
 ?>
